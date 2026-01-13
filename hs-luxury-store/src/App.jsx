@@ -49,16 +49,7 @@ import {
 // --- Firebase Configuration (ENVIRONMENT SETUP - SAFE MODE) ---
 let app, auth, db;
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'hs-luxury-prod';
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDlQ7yDqx8QDnw7Jg5AnQ_ObxcXVoEKr78",
-  authDomain: "hs-luxury-store-e179d.firebaseapp.com",
-  projectId: "hs-luxury-store-e179d",
-  storageBucket: "hs-luxury-store-e179d.firebasestorage.app",
-  messagingSenderId: "8924837218",
-  appId: "1:8924837218:web:8585a671ebac2f9025e83b",
-  measurementId: "G-RDNF640FVM"
-};
+
 try {
   // Check if config exists to prevent White Screen of Death on init
   if (typeof __firebase_config !== 'undefined') {
