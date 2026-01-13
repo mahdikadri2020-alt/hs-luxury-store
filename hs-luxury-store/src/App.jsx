@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
 import {
   LayoutDashboard,
   Package,
@@ -48,12 +49,13 @@ import {
 // IMPORTANT: Remplacez les valeurs ci-dessous par celles de votre projet Firebase
 // Allez sur https://console.firebase.google.com -> Paramètres du projet -> Général
 const firebaseConfig = {
-  apiKey: "AIzaSy...VOTRE_API_KEY",
-  authDomain: "votre-projet.firebaseapp.com",
-  projectId: "votre-projet",
-  storageBucket: "votre-projet.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
+ apiKey: "AIzaSyDlQ7yDqx8QDnw7Jg5AnQ_ObxcXVoEKr78",
+  authDomain: "hs-luxury-store-e179d.firebaseapp.com",
+  projectId: "hs-luxury-store-e179d",
+  storageBucket: "hs-luxury-store-e179d.firebasestorage.app",
+  messagingSenderId: "8924837218",
+  appId: "1:8924837218:web:8585a671ebac2f9025e83b",
+  measurementId: "G-RDNF640FVM"
 };
 
 // Initialisation de Firebase
@@ -208,24 +210,28 @@ const LoginGate = ({ onLoginSuccess, onCancel }) => {
 /**
  * COMPONENT: PRODUCT CARD (FOR LANDING PAGE)
  */
-const ProductCard = ({ product, onViewDetails }) => {
-  const mainImg = product.mainImage || (product.variants?.[0]?.image) || '';
-  return (
-    <div className="bg-white p-4 md:p-5 rounded-[2rem] border border-neutral-100 shadow-sm hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] transition-all duration-500 group flex flex-col cursor-pointer" onClick={() => onViewDetails(product)}>
-      <div className="relative overflow-hidden aspect-square rounded-[1.5rem] mb-4 bg-neutral-50 text-center">
-        <img src={mainImg} className="w-full h-full object-cover transition duration-1000 group-hover:scale-110" alt={product.name} />
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-center">
-           <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg scale-90 group-hover:scale-100 transition-transform">
-              <span className="text-[9px] font-black uppercase tracking-widest text-neutral-800">Commander</span>
-           </div>
-        </div>
-      </div>
-      <div className="text-center space-y-1">
-        <h4 className="font-bold text-[13px] uppercase tracking-tight text-neutral-800 line-clamp-1">{String(product.name)}</h4>
-        <p className="text-amber-700 font-serif font-black text-sm">{Number(product.price).toLocaleString()} DA</p>
-      </div>
-    </div>
-  );
+const ProductCard = ({ product }) => {
+  const mainImg = product.mainImage || (product.variants?.[0]?.image) || '';
+  
+  return (
+    <Link 
+      to={`/product/${product.id}`} 
+      className="bg-white p-4 md:p-5 rounded-[2rem] border border-neutral-100 shadow-sm hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] transition-all duration-500 group flex flex-col cursor-pointer"
+    >
+      <div className="relative overflow-hidden aspect-square rounded-[1.5rem] mb-4 bg-neutral-50 text-center">
+        <img src={mainImg} className="w-full h-full object-cover transition duration-1000 group-hover:scale-110" alt={product.name} />
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-center">
+           <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg scale-90 group-hover:scale-100 transition-transform">
+              <span className="text-[9px] font-black uppercase tracking-widest text-neutral-800">Commander</span>
+           </div>
+        </div>
+      </div>
+      <div className="text-center space-y-1">
+        <h4 className="font-bold text-[13px] uppercase tracking-tight text-neutral-800 line-clamp-1">{String(product.name)}</h4>
+        <p className="text-amber-700 font-serif font-black text-sm">{Number(product.price).toLocaleString()} DA</p>
+      </div>
+    </Link>
+  );
 };
 
 /**
@@ -589,293 +595,122 @@ const AdminPanel = ({ onLogout, products, orders, deliveryPrices, notify }) => {
     </div>
   );
 }
-
+// مكون الصفحة الرئيسية (يعرض صورة الغلاف وقائمة المنتجات)
+const LandingPage = ({ products }) => {
+  return (
+    <>
+      <section className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden pt-24">
+        <div className="absolute inset-0 z-0 scale-110 transform animate-slow-zoom">
+          <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1600" className="w-full h-full object-cover" alt="" />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+        <div className="relative z-10 px-4 space-y-8 max-w-4xl text-center mx-auto">
+          <h3 className="text-amber-400 text-sm font-black uppercase tracking-[0.6em] animate-in slide-in-from-bottom-8 duration-700">Excellence Artisanale Algérienne</h3>
+          <h2 className="text-6xl md:text-9xl font-serif font-black leading-[0.9] text-center uppercase tracking-tighter animate-in slide-in-from-bottom-12 duration-1000">Style <br/><span className="italic font-light">Pur</span></h2>
+          <div className="pt-10 animate-in slide-in-from-bottom-16 duration-1000 delay-200"><a href="#shop" className="bg-white text-black px-16 py-6 font-black uppercase text-xs tracking-[0.4em] hover:bg-amber-700 hover:text-white transition-all shadow-2xl inline-block rounded-full">Explorer</a></div>
+        </div>
+      </section>
+      <section id="shop" className="py-24 bg-neutral-50 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center mx-auto">
+            {products.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+          {products.length === 0 && (
+              <div className="text-center py-20">
+                  <p className="text-neutral-400 font-serif italic text-xl">La collection arrive bientôt...</p>
+              </div>
+          )}
+        </div>
+      </section>
+    </>
+  );
+};
 /**
  * MAIN APP
  */
+// --- التطبيق الرئيسي ---
 export default function App() {
-  const [view, setView] = useState('landing'); 
-  const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [deliveryPrices, setDeliveryPrices] = useState({});
-  const [isOrdering, setIsOrdering] = useState(false);
-  const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [user, setUser] = useState(null);
+  
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [deliveryPrices, setDeliveryPrices] = useState({});
+  const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [activeVariantIdx, setActiveVariantIdx] = useState(0);
-  const [activeSize, setActiveSize] = useState(null);
-  const [selectedWilaya, setSelectedWilaya] = useState('');
-  const [selectedCommune, setSelectedCommune] = useState('');
-  const [deliveryMethod, setDeliveryMethod] = useState('home'); 
-  
-  const [orderName, setOrderName] = useState('');
-  const [orderPhone, setOrderPhone] = useState('');
+  // الاتصال بقاعدة البيانات
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        await signInAnonymously(auth);
+      } catch (err) { console.error(err); }
+    };
+    initAuth();
+    onAuthStateChanged(auth, setUser);
+  }, []);
 
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-        else await signInAnonymously(auth);
-      } catch (err) {}
-    };
-    initAuth();
-    onAuthStateChanged(auth, setUser);
-  }, []);
+  useEffect(() => {
+    if (!user) return;
+    const unsubP = onSnapshot(collection(db, 'products'), snap => setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+    const unsubO = onSnapshot(collection(db, 'orders'), snap => setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+    const unsubD = onSnapshot(collection(db, 'delivery_prices'), snap => {
+      const p = {}; snap.forEach(d => p[d.id] = d.data()); setDeliveryPrices(p);
+    });
+    return () => { unsubP(); unsubO(); unsubD(); };
+  }, [user]);
 
-  useEffect(() => {
-    if (!user) return;
-    const unsubP = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), snap => setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
-    const unsubO = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), snap => setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
-    const unsubD = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'delivery_prices'), snap => {
-      const p = {}; snap.forEach(d => p[d.id] = d.data()); setDeliveryPrices(p);
-    });
-    return () => { unsubP(); unsubO(); unsubD(); };
-  }, [user]);
+  const showToast = (msg, type = 'success') => {
+      setToast({ show: true, msg, type });
+      setTimeout(() => setToast({ show: false, msg: '', type: 'success' }), 4000);
+  };
 
-  const showToast = (msg, type = 'success') => {
-      setToast({ show: true, msg, type });
-      setTimeout(() => setToast({ show: false, msg: '', type: 'success' }), 4000);
-  };
+  return (
+    <Router>
+      <div className="relative font-sans text-neutral-900 bg-white min-h-screen selection:bg-amber-100 overflow-x-hidden">
+        
+        {/* الشريط العلوي */}
+        <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-neutral-100 px-6 h-20 flex items-center justify-between animate-in slide-in-from-top duration-500">
+          <div className="w-1/3 flex items-center gap-8 text-left">
+            <button onClick={() => setShowLogin(true)} className="flex items-center gap-2 text-neutral-400 hover:text-black transition uppercase font-black text-[10px] tracking-[0.3em]">
+                {isLoggedIn ? <ArrowLeft size={16} /> : <Lock size={16} />} 
+                <span className="hidden md:inline">{isLoggedIn ? <Link to="/admin">Dashboard</Link> : 'Admin'}</span>
+            </button>
+          </div>
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Link to="/" className="text-lg md:text-3xl font-serif font-black tracking-[0.2em] md:tracking-[0.4em] uppercase text-neutral-900 text-center whitespace-nowrap hover:scale-105 transition-transform">H&S<span className="text-amber-700 italic font-light"> Luxury</span></Link>
+          </div>
+          <div className="w-1/3 flex justify-end">
+            <div className="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-xs shadow-lg">{orders.length}</div>
+          </div>
+        </nav>
 
-  const currentDeliveryCost = useMemo(() => {
-    if (!selectedWilaya) return 0;
-    const rates = deliveryPrices[selectedWilaya];
-    return rates ? (deliveryMethod === 'home' ? Number(rates.home) : Number(rates.desk)) : 0;
-  }, [selectedWilaya, deliveryMethod, deliveryPrices]);
+        {/* إدارة الروابط والصفحات */}
+        <Routes>
+          <Route path="/" element={<LandingPage products={products} />} />
+          <Route path="/product/:id" element={<ProductDetailsPage products={products} deliveryPrices={deliveryPrices} notify={showToast} />} />
+          <Route path="/admin" element={isLoggedIn ? <AdminPanel onLogout={() => setIsLoggedIn(false)} products={products} orders={orders} deliveryPrices={deliveryPrices} notify={showToast} /> : <div className="h-screen flex items-center justify-center font-bold text-neutral-400">يجب تسجيل الدخول أولاً</div>} />
+        </Routes>
 
-  const handleOrder = async (e) => {
-    e.preventDefault();
-    if (!selectedProduct) return;
-    if (!activeSize) {
-        showToast("Veuillez sélectionner votre pointure أولاً", 'error');
-        return;
-    }
-    if (!selectedCommune) {
-        showToast("Veuillez sélectionner votre commune", 'error');
-        return;
-    }
+        {/* النوافذ المنبثقة */}
+        {showLogin && <LoginGate onLoginSuccess={() => { setIsLoggedIn(true); setShowLogin(false); }} onCancel={() => setShowLogin(false)} />}
+        
+        {toast.show && (
+          <div className={`fixed bottom-12 left-12 px-8 py-4 z-[200] flex items-center gap-4 border-l-8 shadow-2xl rounded-r-2xl animate-in slide-in-from-left transition-all ${toast.type === 'error' ? 'bg-red-50 text-red-800 border-red-600' : 'bg-black text-white border-amber-600'}`}>
+              <CheckCircle size={14} className={toast.type === 'error' ? 'text-red-600' : 'text-amber-600'}/>
+              <span className="text-[10px] font-black uppercase tracking-widest">{toast.msg}</span>
+          </div>
+        )}
 
-    // Validation du numéro de téléphone (Algérie : 05/06/07 + 8 chiffres)
-    const phoneRegex = /^0(5|6|7)[0-9]{8}$/;
-    if (!phoneRegex.test(orderPhone)) {
-        showToast("رقم الهاتف غير صحيح (يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام)", 'error');
-        return;
-    }
-    
-    setIsOrdering(true);
-    try {
-      const variant = selectedProduct.variants[activeVariantIdx];
-      const payload = deepCleanFirestore({
-        customerName: String(orderName),
-        customerPhone: String(orderPhone),
-        wilaya: String(selectedWilaya),
-        commune: String(selectedCommune),
-        deliveryMethod: String(deliveryMethod),
-        items: [{ 
-          name: String(selectedProduct.name), 
-          price: Number(selectedProduct.price), 
-          selectedSize: String(activeSize), 
-          selectedColor: String(variant.color) 
-        }],
-        total: Number(selectedProduct.price) + currentDeliveryCost,
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      });
-      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), payload);
-      showToast("تم تسجيل طلبك بنجاح!");
-      setOrderName(''); setOrderPhone('');
-      setTimeout(() => { setView('landing'); }, 1000);
-    } catch (err) { showToast("Erreur Order", "error"); } finally { setIsOrdering(false); }
-  };
-
-  const renderContent = () => {
-    if (view === 'admin' && isLoggedIn) {
-      return <AdminPanel onLogout={() => setView('landing')} products={products} orders={orders} deliveryPrices={deliveryPrices} notify={showToast} />;
-    }
-
-    if (view === 'product' && selectedProduct) {
-        return (
-          <div className="pt-24 bg-white animate-in fade-in duration-700 min-h-screen text-left">
-             <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-16 text-left">
-                <button onClick={() => setView('landing')} className="absolute top-28 left-6 flex items-center gap-2 text-neutral-400 hover:text-black transition uppercase font-black text-[10px] tracking-widest z-10">
-                   <ArrowLeft size={16} /> <span>Magasin</span>
-                </button>
-                <div className="w-full md:w-1/2 space-y-6 text-center">
-                   <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl bg-neutral-50 border border-neutral-100 mx-auto group">
-                      <img src={selectedProduct.variants[activeVariantIdx]?.image} className="w-full h-full object-cover animate-in zoom-in-95 duration-700 transition-transform group-hover:scale-105" alt="" />
-                      <div className="absolute top-6 left-6 bg-amber-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Premium</div>
-                   </div>
-                   <div className="flex gap-4 justify-center overflow-x-auto py-2 px-2">
-                      {selectedProduct.variants.map((v, i) => (
-                        <button key={i} onClick={() => setActiveVariantIdx(i)} className={`w-20 h-24 shrink-0 rounded-2xl overflow-hidden border-2 transition-all ${activeVariantIdx === i ? 'border-amber-600 scale-105 shadow-xl' : 'border-neutral-200 opacity-40 hover:opacity-100'}`}>
-                          <img src={v.image} className="w-full h-full object-cover" alt="" />
-                        </button>
-                      ))}
-                   </div>
-                </div>
-                <div className="w-full md:w-1/2 flex flex-col justify-center space-y-10 text-left">
-                   <div className="space-y-4 text-left">
-                      <div className="flex items-center gap-2 text-amber-600"><Star size={12} fill="currentColor" /> <span className="text-[10px] font-black uppercase tracking-[0.4em]">Excellence Heritage</span></div>
-                      <h2 className="text-4xl md:text-6xl font-serif font-black text-neutral-900 leading-tight">{String(selectedProduct.name)}</h2>
-                      <p className="text-3xl font-serif text-amber-700 font-bold">{Number(selectedProduct.price).toLocaleString()} DA</p>
-                   </div>
-                   <div className="space-y-6 text-left">
-                      <p className="text-neutral-500 leading-relaxed text-sm">{String(selectedProduct.description) || "Une création artisanale raffinée."}</p>
-                      <div className="grid grid-cols-2 gap-4 text-left">
-                          <div className="flex items-center gap-3 p-4 rounded-2xl bg-neutral-50 border border-neutral-100"><Clock size={16} className="text-amber-600" /><div><p className="text-[8px] font-bold text-neutral-400 uppercase">Expédition</p><p className="text-[10px] font-black text-neutral-800">48h Express</p></div></div>
-                          <div className="flex items-center gap-3 p-4 rounded-2xl bg-neutral-50 border border-neutral-100"><ShieldCheck size={16} className="text-amber-600" /><div><p className="text-[8px] font-bold text-neutral-400 uppercase">Matière</p><p className="text-[10px] font-black text-neutral-800">Cuir Véritable</p></div></div>
-                      </div>
-                   </div>
-                   <div className="space-y-8 text-left py-8 border-y border-neutral-100">
-                      <div className="space-y-3 text-left">
-                          <p className="text-[9px] font-black uppercase text-neutral-400 tracking-widest text-left">Couleur: <span className="text-neutral-900">{String(selectedProduct.variants[activeVariantIdx]?.color)}</span></p>
-                          <div className="flex flex-wrap gap-2 text-left">
-                             {selectedProduct.variants.map((v, i) => (
-                               <button key={i} onClick={() => setActiveVariantIdx(i)} className={`px-6 py-3 text-[10px] font-black uppercase border rounded-xl transition-all ${activeVariantIdx === i ? 'bg-neutral-900 text-white border-neutral-900 shadow-md transform scale-105' : 'bg-white text-neutral-500 border-neutral-200 hover:border-neutral-400'}`}>
-                                 {v.color}
-                               </button>
-                             ))}
-                          </div>
-                      </div>
-                      <div className="space-y-3 text-left">
-                          <p className="text-[9px] font-black uppercase text-neutral-400 tracking-widest text-left">Pointure</p>
-                          <div className="grid grid-cols-5 md:grid-cols-7 gap-2 text-left">
-                             {selectedProduct.sizes?.sort((a,b)=>a-b).map(size => (
-                               <button key={size} onClick={() => setActiveSize(size)} className={`py-4 text-[10px] font-black border rounded-2xl transition-all ${activeSize === size ? 'bg-black text-white border-black shadow-lg scale-105' : 'bg-white border-neutral-100 text-neutral-400 hover:border-amber-400'}`}>{size}</button>
-                             ))}
-                          </div>
-                      </div>
-                   </div>
-
-                   {/* DIRECT PURCHASE FORM */}
-                   <div className="bg-neutral-50 p-8 md:p-12 rounded-[3rem] border border-neutral-100 space-y-8 text-right shadow-sm" dir="rtl">
-                      <div className="flex items-center gap-4 text-neutral-900 text-right">
-                          <div className="p-3 bg-amber-100 rounded-2xl text-amber-700"><User size={24}/></div>
-                          <h3 className="text-xl font-black">معلومات الشراء</h3>
-                      </div>
-                      <form onSubmit={handleOrder} className="space-y-6 text-right">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-right">
-                           <input required placeholder="الاسم الكامل" className="w-full p-5 bg-white border border-neutral-200 rounded-2xl text-sm outline-none focus:border-amber-600 text-right" value={orderName} onChange={e=>setOrderName(e.target.value)} />
-                           <input 
-                             required 
-                             type="tel" 
-                             maxLength={10}
-                             placeholder="رقم الهاتف (05/06/07...)" 
-                             className="w-full p-5 bg-white border border-neutral-200 rounded-2xl text-sm outline-none focus:border-amber-600 text-right" 
-                             value={orderPhone} 
-                             onChange={e => {
-                               // Only allow numbers
-                               const val = e.target.value.replace(/\D/g, '');
-                               setOrderPhone(val);
-                             }} 
-                           />
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-right">
-                           <select required className="w-full p-5 bg-white border border-neutral-200 rounded-2xl text-sm font-bold outline-none focus:border-amber-600 text-right appearance-none" value={selectedWilaya} onChange={e=>{setSelectedWilaya(e.target.value); setSelectedCommune('');}}>
-                             <option value="" disabled>اختر الولاية</option>
-                             {ALGERIA_WILAYAS.map(w => <option key={w} value={w}>{w}</option>)}
-                           </select>
-                           <select required className="w-full p-5 bg-white border border-neutral-200 rounded-2xl text-sm font-bold outline-none focus:border-amber-600 text-right appearance-none" value={selectedCommune} onChange={e=>setSelectedCommune(e.target.value)} disabled={!selectedWilaya}>
-                             <option value="" disabled>اختر البلدية</option>
-                             {selectedWilaya && ALGERIA_DATA[selectedWilaya].sort().map(c => <option key={c} value={c}>{c}</option>)}
-                           </select>
-                        </div>
-                        {selectedWilaya && (
-                          <div className="grid grid-cols-2 gap-4 text-right animate-in fade-in">
-                            <button type="button" onClick={() => setDeliveryMethod('home')} className={`p-5 rounded-2xl border-2 flex flex-col items-center gap-1 transition-all ${deliveryMethod === 'home' ? 'border-amber-600 bg-amber-600/10 text-amber-600 shadow-md' : 'border-neutral-200 bg-white opacity-50 hover:opacity-100'}`}><Home size={20}/><span className="text-[10px] font-black">إلى المنزل</span><span className="text-[10px] font-bold">{(deliveryPrices[selectedWilaya]?.home || 0)} DA</span></button>
-                            <button type="button" onClick={() => setDeliveryMethod('desk')} className={`p-5 rounded-2xl border-2 flex flex-col items-center gap-1 transition-all ${deliveryMethod === 'desk' ? 'border-amber-600 bg-amber-600/10 text-amber-600 shadow-md' : 'border-neutral-200 bg-white opacity-50 hover:opacity-100'}`}><Building2 size={20}/><span className="text-[10px] font-black">إلى المكتب</span><span className="text-[10px] font-bold">{(deliveryPrices[selectedWilaya]?.desk || 0)} DA</span></button>
-                          </div>
-                        )}
-                        <button type="submit" disabled={isOrdering || !selectedWilaya || !selectedCommune} className="w-full bg-black text-white py-6 rounded-[2rem] font-black uppercase text-center flex items-center justify-center gap-4 hover:bg-neutral-800 transition shadow-xl">
-                           {isOrdering ? <Loader2 className="animate-spin" /> : "تأكيد الطلب"}
-                        </button>
-                      </form>
-                      <div className="flex justify-center gap-8 pt-4 text-center mx-auto">
-                          <div className="flex items-center gap-2 text-[10px] font-black text-neutral-400 uppercase"><CheckCircle size={14} className="text-amber-600"/><span className="text-center">الدفع عند الاستلام</span></div>
-                          <div className="flex items-center gap-2 text-[10px] font-black text-neutral-400 uppercase"><CheckCircle size={14} className="text-amber-600"/><span className="text-center">إمكانية القياس</span></div>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-        );
-    }
-
-    return (
-      <>
-        <section className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden pt-24">
-          <div className="absolute inset-0 z-0 scale-110 transform animate-slow-zoom">
-            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1600" className="w-full h-full object-cover" alt="" />
-            <div className="absolute inset-0 bg-black/60" />
-          </div>
-          <div className="relative z-10 px-4 space-y-8 max-w-4xl text-center mx-auto">
-            <h3 className="text-amber-400 text-sm font-black uppercase tracking-[0.6em] animate-in slide-in-from-bottom-8 duration-700">Excellence Artisanale Algérienne</h3>
-            <h2 className="text-6xl md:text-9xl font-serif font-black leading-[0.9] text-center uppercase tracking-tighter animate-in slide-in-from-bottom-12 duration-1000">Style <br/><span className="italic font-light">Pur</span></h2>
-            <div className="pt-10 animate-in slide-in-from-bottom-16 duration-1000 delay-200"><a href="#shop" className="bg-white text-black px-16 py-6 font-black uppercase text-xs tracking-[0.4em] hover:bg-amber-700 hover:text-white transition-all shadow-2xl inline-block rounded-full">Explorer</a></div>
-          </div>
-        </section>
-        <section id="shop" className="py-24 bg-neutral-50 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center mx-auto">
-              {products.map(p => (
-                <ProductCard key={p.id} product={p} onViewDetails={(prod) => { setSelectedProduct(prod); setView('product'); setActiveVariantIdx(0); setActiveSize(null); setSelectedWilaya(''); setSelectedCommune(''); }} />
-              ))}
-            </div>
-            {products.length === 0 && (
-                <div className="text-center py-20">
-                    <p className="text-neutral-400 font-serif italic text-xl">La collection arrive bientôt...</p>
-                </div>
-            )}
-          </div>
-        </section>
-      </>
-    );
-  };
-
-  return (
-    <div className="relative font-sans text-neutral-900 bg-white min-h-screen selection:bg-amber-100 overflow-x-hidden">
-      {view !== 'admin' && (
-        <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-neutral-100 px-6 h-20 flex items-center justify-between animate-in slide-in-from-top duration-500">
-          <div className="w-1/3 flex items-center gap-8 text-left">
-            <button onClick={() => { if(view === 'landing') setShowLogin(true); else setView('landing'); }} className="flex items-center gap-2 text-neutral-400 hover:text-black transition uppercase font-black text-[10px] tracking-[0.3em]">
-                {view === 'landing' ? <Lock size={16} /> : <ArrowLeft size={16} />} 
-                <span className="hidden md:inline">{view === 'landing' ? 'Admin' : 'Magasin'}</span>
-            </button>
-          </div>
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => setView('landing')} className="text-lg md:text-3xl font-serif font-black tracking-[0.2em] md:tracking-[0.4em] uppercase text-neutral-900 text-center whitespace-nowrap hover:scale-105 transition-transform">H&S<span className="text-amber-700 italic font-light"> Luxury</span></button>
-          </div>
-          <div className="w-1/3 flex justify-end">
-            <div className="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-xs shadow-lg">{orders.length}</div>
-          </div>
-        </nav>
-      )}
-
-      {renderContent()}
-
-      {showLogin && <LoginGate onLoginSuccess={() => { setIsLoggedIn(true); setView('admin'); setShowLogin(false); }} onCancel={() => setShowLogin(false)} />}
-      
-      {toast.show && (
-        <div className={`fixed bottom-12 left-12 px-8 py-4 z-[200] flex items-center gap-4 border-l-8 shadow-2xl rounded-r-2xl animate-in slide-in-from-left transition-all ${toast.type === 'error' ? 'bg-red-50 text-red-800 border-red-600' : 'bg-black text-white border-amber-600'}`}>
-            <CheckCircle size={14} className={toast.type === 'error' ? 'text-red-600' : 'text-amber-600'}/>
-            <span className="text-[10px] font-black uppercase tracking-widest">{toast.msg}</span>
-        </div>
-      )}
-
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
-        }
-        @keyframes slow-zoom { from { transform: scale(1); } to { transform: scale(1.05); } }
-        .animate-slow-zoom { animation: slow-zoom 20s infinite alternate ease-in-out; }
-      `}</style>
-    </div>
-  );
+        <style>{`
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          @keyframes slow-zoom { from { transform: scale(1); } to { transform: scale(1.05); } }
+          .animate-slow-zoom { animation: slow-zoom 20s infinite alternate ease-in-out; }
+        `}</style>
+      </div>
+    </Router>
+  );
 }
