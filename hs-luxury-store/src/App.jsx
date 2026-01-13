@@ -46,23 +46,25 @@ import {
   signInWithCustomToken
 } from 'firebase/auth';
 
-// --- Firebase Configuration (ENVIRONMENT SETUP - SAFE MODE) ---
-let app, auth, db;
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'hs-luxury-prod';
+// --- Firebase Configuration ---
+// 👇 ضع إعدادات Firebase الخاصة بك هنا (انسخها من وحدة تحكم Firebase)
+const firebaseConfig = {
+  apiKey: "AIzaSyDlQ7yDqx8QDnw7Jg5AnQ_ObxcXVoEKr78",
+  authDomain: "hs-luxury-store-e179d.firebaseapp.com",
+  projectId: "hs-luxury-store-e179d",
+  storageBucket: "hs-luxury-store-e179d.firebasestorage.app",
+  messagingSenderId: "8924837218",
+  appId: "1:8924837218:web:8585a671ebac2f9025e83b",
+  measurementId: "G-RDNF640FVM"
+};
 
-try {
-  // Check if config exists to prevent White Screen of Death on init
-  if (typeof __firebase_config !== 'undefined') {
-    const firebaseConfig = JSON.parse(__firebase_config);
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-  } else {
-    console.warn("Warning: __firebase_config is undefined. App may not function correctly.");
-  }
-} catch (e) {
-  console.error("Firebase Initialization Error:", e);
-}
+// تهيئة Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// معرف التطبيق (يمكنك تغييره لاسم متجرك)
+const appId = 'hs-luxury-store';
 
 // --- Algerian Administrative Data (Comprehensive) ---
 const ALGERIA_DATA = {
@@ -781,12 +783,12 @@ export default function App() {
                        {/* COPY LINK BUTTON */}
                        <div className="absolute top-6 right-6">
                            <button 
-                              onClick={() => {
-                                navigator.clipboard.writeText(window.location.href);
-                                showToast("تم نسخ الرابط!", "success");
-                              }} 
-                              className="p-3 bg-white/90 backdrop-blur rounded-full hover:bg-white transition text-neutral-600 shadow-md"
-                              title="نسخ الرابط"
+                             onClick={() => {
+                               navigator.clipboard.writeText(window.location.href);
+                               showToast("تم نسخ الرابط!", "success");
+                             }} 
+                             className="p-3 bg-white/90 backdrop-blur rounded-full hover:bg-white transition text-neutral-600 shadow-md"
+                             title="نسخ الرابط"
                            >
                              <LinkIcon size={16} />
                            </button>
