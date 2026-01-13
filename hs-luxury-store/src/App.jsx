@@ -48,13 +48,12 @@ import {
 // IMPORTANT: Remplacez les valeurs ci-dessous par celles de votre projet Firebase
 // Allez sur https://console.firebase.google.com -> Paramètres du projet -> Général
 const firebaseConfig = {
- apiKey: "AIzaSyDlQ7yDqx8QDnw7Jg5AnQ_ObxcXVoEKr78",
-  authDomain: "hs-luxury-store-e179d.firebaseapp.com",
-  projectId: "hs-luxury-store-e179d",
-  storageBucket: "hs-luxury-store-e179d.firebasestorage.app",
-  messagingSenderId: "8924837218",
-  appId: "1:8924837218:web:8585a671ebac2f9025e83b",
-  measurementId: "G-RDNF640FVM"
+  apiKey: "AIzaSy...VOTRE_API_KEY",
+  authDomain: "votre-projet.firebaseapp.com",
+  projectId: "votre-projet",
+  storageBucket: "votre-projet.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
 };
 
 // Initialisation de Firebase
