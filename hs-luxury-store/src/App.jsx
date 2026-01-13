@@ -905,7 +905,7 @@ export default function App() {
       <>
         <section className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden pt-24">
           <div className="absolute inset-0 z-0 scale-110 transform animate-slow-zoom">
-            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1600" className="w-full h-full object-cover" alt="" />
+            <img src="https://i.postimg.cc/K8M64RvT/Whats-App-Image-2026-01-13-at-22-22-04.jpg" className="w-full h-full object-cover" alt="" />
             <div className="absolute inset-0 bg-black/60" />
           </div>
           <div className="relative z-10 px-4 space-y-8 max-w-4xl text-center mx-auto">
