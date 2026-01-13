@@ -46,12 +46,23 @@ import {
   signInWithCustomToken
 } from 'firebase/auth';
 
-// --- Firebase Configuration (ENVIRONMENT SETUP) ---
-const firebaseConfig = JSON.parse(__firebase_config);
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// --- Firebase Configuration (ENVIRONMENT SETUP - SAFE MODE) ---
+let app, auth, db;
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'hs-luxury-prod';
+
+try {
+  // Check if config exists to prevent White Screen of Death on init
+  if (typeof __firebase_config !== 'undefined') {
+    const firebaseConfig = JSON.parse(__firebase_config);
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } else {
+    console.warn("Warning: __firebase_config is undefined. App may not function correctly.");
+  }
+} catch (e) {
+  console.error("Firebase Initialization Error:", e);
+}
 
 // --- Algerian Administrative Data (Comprehensive) ---
 const ALGERIA_DATA = {
@@ -620,6 +631,9 @@ export default function App() {
 
   // AUTHENTICATION INITIALIZATION
   useEffect(() => {
+    // Safety check: ensure auth exists before using it
+    if (!auth) return;
+
     const initAuth = async () => {
       try {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -638,7 +652,7 @@ export default function App() {
 
   // DATA SYNC
   useEffect(() => {
-    if (!user) return;
+    if (!user || !db) return; // Wait for user AND db
     const unsubP = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), snap => setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() }))), (err) => console.log("Products Sync Error", err));
     const unsubO = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), snap => setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() }))), (err) => console.log("Orders Sync Error", err));
     const unsubD = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'delivery_prices'), snap => {
@@ -761,7 +775,7 @@ export default function App() {
                  </button>
                  <div className="w-full md:w-1/2 space-y-6 text-center">
                     <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl bg-neutral-50 border border-neutral-100 mx-auto group">
-                       <img src={selectedProduct.variants[activeVariantIdx]?.image} className="w-full h-full object-cover animate-in zoom-in-95 duration-700 transition-transform group-hover:scale-105" alt="" />
+                       <img src={selectedProduct.variants?.[activeVariantIdx]?.image} className="w-full h-full object-cover animate-in zoom-in-95 duration-700 transition-transform group-hover:scale-105" alt="" />
                        <div className="absolute top-6 left-6 bg-amber-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Premium</div>
                        
                        {/* COPY LINK BUTTON */}
@@ -779,7 +793,7 @@ export default function App() {
                        </div>
                     </div>
                     <div className="flex gap-4 justify-center overflow-x-auto py-2 px-2">
-                       {selectedProduct.variants.map((v, i) => (
+                       {selectedProduct.variants?.map((v, i) => (
                          <button key={i} onClick={() => setActiveVariantIdx(i)} className={`w-20 h-24 shrink-0 rounded-2xl overflow-hidden border-2 transition-all ${activeVariantIdx === i ? 'border-amber-600 scale-105 shadow-xl' : 'border-neutral-200 opacity-40 hover:opacity-100'}`}>
                            <img src={v.image} className="w-full h-full object-cover" alt="" />
                          </button>
@@ -801,9 +815,9 @@ export default function App() {
                     </div>
                     <div className="space-y-8 text-left py-8 border-y border-neutral-100">
                        <div className="space-y-3 text-left">
-                           <p className="text-[9px] font-black uppercase text-neutral-400 tracking-widest text-left">Couleur: <span className="text-neutral-900">{String(selectedProduct.variants[activeVariantIdx]?.color)}</span></p>
+                           <p className="text-[9px] font-black uppercase text-neutral-400 tracking-widest text-left">Couleur: <span className="text-neutral-900">{String(selectedProduct.variants?.[activeVariantIdx]?.color)}</span></p>
                            <div className="flex flex-wrap gap-2 text-left">
-                             {selectedProduct.variants.map((v, i) => (
+                             {selectedProduct.variants?.map((v, i) => (
                                <button key={i} onClick={() => setActiveVariantIdx(i)} className={`px-6 py-3 text-[10px] font-black uppercase border rounded-xl transition-all ${activeVariantIdx === i ? 'bg-neutral-900 text-white border-neutral-900 shadow-md transform scale-105' : 'bg-white text-neutral-500 border-neutral-200 hover:border-neutral-400'}`}>
                                  {v.color}
                                </button>
@@ -872,6 +886,17 @@ export default function App() {
               </div>
           </div>
         );
+    }
+
+    // Safety fallback for missing config
+    if (!auth || !db) {
+      return (
+        <div className="flex flex-col items-center justify-center h-screen bg-neutral-50 text-neutral-400 font-sans p-6 text-center">
+           <AlertCircle size={48} className="mb-4 text-red-400" />
+           <h2 className="text-xl font-bold text-neutral-700">Configuration Manquante</h2>
+           <p className="mt-2 text-sm max-w-md">L'application n'a pas pu se connecter à la base de données. Veuillez vérifier la configuration Firebase (__firebase_config).</p>
+        </div>
+      );
     }
 
     return (
