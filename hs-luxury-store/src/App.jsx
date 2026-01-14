@@ -47,24 +47,14 @@ import {
 } from 'firebase/auth';
 
 // --- Firebase Configuration ---
-// 👇 ضع إعدادات Firebase الخاصة بك هنا (انسخها من وحدة تحكم Firebase)
-const firebaseConfig = {
-  apiKey: "AIzaSyDlQ7yDqx8QDnw7Jg5AnQ_ObxcXVoEKr78",
-  authDomain: "hs-luxury-store-e179d.firebaseapp.com",
-  projectId: "hs-luxury-store-e179d",
-  storageBucket: "hs-luxury-store-e179d.firebasestorage.app",
-  messagingSenderId: "8924837218",
-  appId: "1:8924837218:web:8585a671ebac2f9025e83b",
-  measurementId: "G-RDNF640FVM"
-};
-
-// تهيئة Firebase
+// Using environment variables for compatibility with the preview environment
+const firebaseConfig = JSON.parse(__firebase_config);
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// معرف التطبيق (يمكنك تغييره لاسم متجرك)
-const appId = 'hs-luxury-store';
+// Use environment app ID or fallback
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'hs-luxury-store';
 
 // --- Algerian Administrative Data (Comprehensive) ---
 const ALGERIA_DATA = {
@@ -187,7 +177,7 @@ const LoginGate = ({ onLoginSuccess, onCancel }) => {
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in">
       <div className="bg-white w-full max-w-md p-10 rounded-[2.5rem] shadow-2xl relative">
         <button onClick={onCancel} className="absolute top-4 right-4 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 transition">
-             <X size={20} />
+              <X size={20} />
         </button>
         <div className="text-center mb-10 text-center">
           <div className="w-16 h-16 bg-amber-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl text-center"><Lock className="text-white" /></div>
@@ -916,7 +906,8 @@ export default function App() {
         </section>
         <section id="shop" className="py-24 bg-neutral-50 px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center mx-auto">
+            {/* تم التعديل هنا: grid-cols-1 لعرض منتج واحد في كل سطر، و max-w-lg لتحديد العرض المناسب */}
+            <div className="grid grid-cols-1 gap-12 text-center mx-auto max-w-lg">
               {products.map(p => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -944,7 +935,10 @@ export default function App() {
             </button>
           </div>
           <div className="absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => window.location.hash = ''} className="text-lg md:text-3xl font-serif font-black tracking-[0.2em] md:tracking-[0.4em] uppercase text-neutral-900 text-center whitespace-nowrap hover:scale-105 transition-transform">H&S<span className="text-amber-700 italic font-light"> Luxury</span></button>
+            {/* تم التعديل هنا: جعل الخط أكثر كلاسيكية باستخدام font-medium italic وتقليل التباعد قليلاً ليتناسب مع النمط الكلاسيكي */}
+            <button onClick={() => window.location.hash = ''} className="text-2xl md:text-4xl font-serif font-medium italic tracking-[0.1em] md:tracking-[0.2em] text-neutral-900 text-center whitespace-nowrap hover:scale-105 transition-transform">
+              H&S <span className="text-amber-700 font-light not-italic">Luxury</span>
+            </button>
           </div>
           <div className="w-1/3 flex justify-end">
             <div className="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-xs shadow-lg">{orders.length}</div>
