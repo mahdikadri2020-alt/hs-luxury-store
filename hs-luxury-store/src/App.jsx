@@ -56,9 +56,14 @@ const firebaseConfig = {
   appId: "1:8924837218:web:8585a671ebac2f9025e83b",
   measurementId: "G-RDNF640FVM"
 };
+// Initialisation de Firebase
+// Note: Assurez-vous d'avoir installé firebase: npm install firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = 'hs-luxury-prod'; // Identifiant unique pour votre boutique
 
-// Use environment app ID or fallback
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'hs-luxury-store';
+
 
 // --- Algerian Administrative Data (Comprehensive) ---
 const ALGERIA_DATA = {
