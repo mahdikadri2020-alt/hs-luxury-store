@@ -47,6 +47,7 @@ import {
 } from 'firebase/auth';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { getFirestore } from 'firebase/firestore';
 const firebaseConfig = {
   apiKey: "AIzaSyDlQ7yDqx8QDnw7Jg5AnQ_ObxcXVoEKr78",
   authDomain: "hs-luxury-store-e179d.firebaseapp.com",
@@ -61,8 +62,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const appId = 'hs-luxury-prod'; // Identifiant unique pour votre boutique
-
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'hs-luxury-store';
 
 
 // --- Algerian Administrative Data (Comprehensive) ---
